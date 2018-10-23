@@ -9972,6 +9972,9 @@ void print_usage() {
 uint64_t selfie() {
   uint64_t* option;
 
+  print((uint64_t*) "This is Ioannis Chalkias Selfie.");
+  println();
+
   if (number_of_remaining_arguments() == 0)
     print_usage();
   else {
