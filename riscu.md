@@ -108,3 +108,5 @@ control_instruktions = { ( "beq" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "
                            | instruction ) }.  
 
 systems_instruktions = { ( "ecall" | instruction ) }.                             
+
+data = {( address ".quad" hexadecimal)}.
