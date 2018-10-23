@@ -57,3 +57,18 @@ The parameter `imm` denotes a signed integer value represented by a fixed number
 #### System
 
 `ecall`: system call number is in `$a7`, parameters are in `$a0-$a2`, return value is in `$a0`.
+
+### Grammar
+
+RISC-V Keywords: `$zero`, `$sp`, `$gp`, `$ra`, `$tp`, `$fp`
+
+temporary_registers = ("$t" ["0"|...|"6"]).
+
+argument_registers = ("$a" ["0"|...|"7"]).
+
+s_registers = ("$s" ["1"|...|"11"]).
+
+hexadecimal = ("0x" {"0"|...|"9"|"A"|...|"F"}).
+
+
+risc-v = { code }
