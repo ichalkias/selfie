@@ -102,9 +102,9 @@ memory_instructions = { ( "ld" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$t
                           | "sd" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate "(" (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) ")" {" "|\n}) }.
 
 control_instruktions = { ( "beq" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp"  
-                                | "$zero" ) "," immediate  {" "|\n}
-                           |"jal" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate {" "|\n}
-                           |"jalr" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate "(" (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) ")" {" "|\n}
+                                | "$zero" ) "," immediate  {" "|\n} address "nop"
+                           |"jal" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate {" "|\n} address "nop"
+                           |"jalr" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate "(" (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) ")" {" "|\n} address "nop"
                            | instruction ) }.  
 
 systems_instruktions = { ( "ecall" | instruction ) }.                             
