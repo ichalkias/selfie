@@ -66,9 +66,15 @@ temporary_registers = ("$t" ["0"|...|"6"]).
 
 argument_registers = ("$a" ["0"|...|"7"]).
 
-s_registers = ("$s" ["1"|...|"11"]).
+calleeSaved_registers = ("$s" ["1"|...|"11"]).
 
-hexadecimal = ("0x" {"0"|...|"9"|"A"|...|"F"}).
+hexadecimal = ("0x" ("0"|...|"9"|"A"|...|"F") {"0"|...|"9"|"A"|...|"F"}).
+
+address = hexadecimal ":".
 
 
-risc-v = { code }
+risc-v = { (code data) } .
+
+code = { address {" "\n} instruction {" "\n} }.
+
+instruction = { arithmetic_instruktions | initialization_instructions | memory_instructions | control_instruktions | systems_instruktions }.
