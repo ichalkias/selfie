@@ -68,13 +68,43 @@ argument_registers = ("$a" ["0"|...|"7"]).
 
 calleeSaved_registers = ("$s" ["1"|...|"11"]).
 
-hexadecimal = ("0x" ("0"|...|"9"|"A"|...|"F") {"0"|...|"9"|"A"|...|"F"}).
+registers = temporary_registers | argument_registers | calleeSaved_registers.
+
+digit = "0"|...|"9".
+
+letters = "A"|...|"F".
+
+hexadecimal = ("0x" (digit|letters) {digit|letters}).
 
 address = hexadecimal ":".
 
+immediate = ([-] digit {digit} | hexadecimal ) .
 
 risc-v = { (code data) } .
 
-code = { address {" "\n} instruction {" "\n} }.
+code = { (address {" "|\n} instruction {" "|\n}) (address "nop") }.
 
 instruction = { arithmetic_instruktions | initialization_instructions | memory_instructions | control_instruktions | systems_instruktions }.
+
+initialization_instructions = {("lui" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate {" "|\n}
+                                |"addi" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) "," immediate  {" "|\n}  | instruction)}.
+
+arithmetic_instruktions = { ( "add" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp"  
+                                | "$zero" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) {" "|\n}
+                              |"sub"  {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) {" "|\n}
+                              |"mul"  {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" |      "$zero" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) {" "|\n}
+                              |"divu"  {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) {" "|\n}
+                              |"remu"  {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) {" "|\n}
+                              |"sltu"  {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) {" "|\n}
+                              | instruction ) }.
+
+memory_instructions = { ( "ld" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate "(" (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) ")" {" "|\n}
+                          | "sd" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate "(" (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) ")" {" "|\n}) }.
+
+control_instruktions = { ( "beq" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp"  
+                                | "$zero" ) "," immediate  {" "|\n}
+                           |"jal" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate {" "|\n}
+                           |"jalr" {" "|\n} (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" ) "," immediate "(" (registers | "$gp" | "$sp" | "$ra" | "$tp" | "$fp" | "$zero" ) ")" {" "|\n}
+                           | instruction ) }.  
+
+systems_instruktions = { ( "ecall" | instruction ) }.                             
